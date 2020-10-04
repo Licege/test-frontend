@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import { createNewCatalog, isAvailableCatalog } from '../../thunks/catalogs'
@@ -11,14 +11,28 @@ import '../../styles/form.css'
 export const CreateCatalog = () => {
     const history = useHistory()
     const dispatch = useDispatch()
+    const status = useSelector(state => state.app.status)
     const errors = useSelector(state => state.app.errors)
+
+    useEffect(() => {
+        document.title = 'Создать каталог'
+        return () => dispatch(actions.clear())
+    }, [dispatch])
 
     const submit = (data) => (event) => {
         event.preventDefault()
         dispatch(createNewCatalog(data))
     }
 
-    const goBack = () => history.goBack()
+    const goBack = useCallback(() => {
+        history.goBack()
+    }, [history])
+
+    useEffect(() => {
+        if (status === 'redirect') {
+            goBack()
+        }
+    }, [status, goBack])
 
     const clearTitleError = useCallback(() => dispatch(actions.checkCatalogTitle(true)), [dispatch])
 

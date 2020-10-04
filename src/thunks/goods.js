@@ -13,7 +13,6 @@ export const getGoodById = ( id ) => async ( dispatch ) => {
 
 export const isAvailableGood = ( title ) => async ( dispatch ) => {
     let response = await goodsAPI.isAvailableTitle(title)
-    console.log(response)
     if (response?.ok) {
         dispatch(actions.isAvailableTitle(response.data))
     }
@@ -21,14 +20,18 @@ export const isAvailableGood = ( title ) => async ( dispatch ) => {
 
 export const createNewGood = ( data ) => async ( dispatch ) => {
     let response = await goodsAPI.createGood(data)
-    if (response.ok) {
+    if (!response.ok) {
+        response.data?.message === 'Already Exists' && dispatch(actions.isAvailableTitle(false))
+    } else {
         dispatch(actions.createGood(response.data))
     }
 }
 
 export const updateGood = ( data ) => async ( dispatch ) => {
     let response = await goodsAPI.updateGood(data)
-    if (response.ok) {
+    if (!response.ok) {
+        response.data?.message === 'Already Exists' && dispatch(actions.isAvailableTitle(false))
+    } else {
         dispatch(actions.updateGood(data))
     }
 }

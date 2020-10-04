@@ -8,6 +8,7 @@ import { getGoodById, isAvailableGood, updateGood } from '../../thunks/goods'
 
 export const EditGood = () => {
     const currentGood = useSelector(state => state.app.currentGood)
+    const status = useSelector(state => state.app.status)
     const errors = useSelector(state => state.app.errors)
     const history = useHistory()
     const { id } = useParams()
@@ -15,7 +16,8 @@ export const EditGood = () => {
 
     useEffect(() => {
         document.title = 'Редактировать товар'
-    }, [])
+        return () => dispatch(actions.clear())
+    }, [dispatch])
 
     useEffect(() => {
         dispatch(getGoodById(id))
@@ -26,7 +28,15 @@ export const EditGood = () => {
         dispatch(updateGood(data))
     }
 
-    const goBack = () => history.goBack()
+    const goBack = useCallback(() => {
+        history.goBack()
+    }, [history])
+
+    useEffect(() => {
+        if (status === 'redirect') {
+            goBack()
+        }
+    }, [status, goBack])
 
     const clearTitleError = useCallback(() => dispatch(actions.isAvailableTitle(true)), [dispatch])
 

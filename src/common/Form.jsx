@@ -40,7 +40,7 @@ export const CustomForm = ({ data, fields, errors, onSubmit, onCancel, checkAvai
                                       isInvalid={errors[field.name]}
                                       {...field}
                         />
-                        {errors[field.name] && <span>{errors[field.name]}</span>}
+                        {errors[field.name] && <span className='form-error'>{errors[field.name]}</span>}
                     </Form.Group>
                 ))}
                 <div className='form-actions'>

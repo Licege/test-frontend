@@ -27,7 +27,9 @@ export const createNewCatalog = ( data ) => async ( dispatch ) => {
 
 export const updateCatalog = ( data ) => async ( dispatch ) => {
     let response = await catalogAPI.updateCatalog(data)
-    if (response.ok) {
+    if (!response.ok) {
+        response.data?.message === 'Already Exists' && dispatch(actions.checkCatalogTitle(false))
+    } else {
         dispatch(actions.updateCatalog(response.data))
     }
 }

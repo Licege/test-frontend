@@ -13,10 +13,15 @@ export const EditCatalog = () => {
     const { id } = useParams()
     const dispatch = useDispatch()
     const catalog = useSelector(state => state.app.currentCatalog)
+    const status = useSelector(state => state.app.status)
     const errors = useSelector(state => state.app.errors)
 
     useEffect(() => {
-        document.title = 'Редактирование каталога'
+        document.title = 'Редактировать каталог'
+        return () => dispatch(actions.clear())
+    }, [dispatch])
+
+    useEffect(() => {
         dispatch(getCatalogById(id))
     }, [id, dispatch])
 
@@ -25,7 +30,15 @@ export const EditCatalog = () => {
         dispatch(updateCatalog(data))
     }
 
-    const goBack = () => history.goBack()
+    const goBack = useCallback(() => {
+        history.goBack()
+    }, [history])
+
+    useEffect(() => {
+        if (status === 'redirect') {
+            goBack()
+        }
+    }, [status, goBack])
 
     const clearTitleError = useCallback(() => dispatch(actions.checkCatalogTitle(true)), [dispatch])
 

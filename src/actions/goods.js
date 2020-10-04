@@ -1,3 +1,5 @@
+import { CLEAR } from './catalogs'
+
 export const GET_GOODS = 'GOODS/GET_GOODS'
 export const GET_GOOD_BY_ID = 'GOODS/GET_GOOD_BY_ID'
 export const CHECK_GOODS_TITLE = 'GOODS/CHECK_GOODS_TITLE'
@@ -11,5 +13,6 @@ export const actions = {
     isAvailableTitle: (available) => ({ type: CHECK_GOODS_TITLE, available }),
     createGood: (payload) => ({ type: CREATE_GOOD, payload }),
     updateGood: (payload) => ({ type: UPDATE_GOOD, payload }),
-    deleteGood: (id) => ({ type: DELETE_GOOD, id })
+    deleteGood: (id) => ({ type: DELETE_GOOD, id }),
+    clear: () => ({ type: CLEAR }),
 }

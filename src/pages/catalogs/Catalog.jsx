@@ -7,6 +7,7 @@ import { CustomTable } from '../../common/Table'
 import { GOODS_TABLE_LABELS } from '../../utils/constants'
 import { destroyGood, getAllGoods } from '../../thunks/goods'
 import { formQuery } from '../../utils/tools'
+import { getCatalogById } from '../../thunks/catalogs'
 
 export const Catalog = ({ catalog }) => {
     const goods = useSelector(state => state.app.goods)
@@ -15,7 +16,12 @@ export const Catalog = ({ catalog }) => {
     const { id } = useParams()
 
     useEffect(() => {
+        document.title = 'Каталог'
+    }, [])
+
+    useEffect(() => {
         dispatch(getAllGoods(formQuery({ id })))
+        dispatch(getCatalogById(id))
     }, [id, dispatch])
 
     const create = () => history.push(`/goods/new`)

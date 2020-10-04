@@ -35,7 +35,7 @@ export const CatalogsList = () => {
                 {catalogs.map((catalog, key) => (
                     <tr key={key} onClick={detail(catalog.id)}>
                         <td>{catalog.title}</td>
-                        <td>{catalog.description}</td>
+                        <td>{catalog.count}</td>
                         <td>
                             <Button variant='link' onClick={edit(catalog.id)}>Редактировать</Button>
                         </td>

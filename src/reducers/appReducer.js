@@ -1,16 +1,17 @@
 import {
     CHECK_CATALOG_TITLE,
+    CLEAR, CREATE_CATALOG,
     DELETE_CATALOG,
     GET_CATALOG_BY_ID,
     GET_CATALOGS,
     UPDATE_CATALOG,
 } from '../actions/catalogs'
 import {
-    CHECK_GOODS_TITLE,
+    CHECK_GOODS_TITLE, CREATE_GOOD,
     DELETE_GOOD,
     GET_GOOD_BY_ID,
     GET_GOODS,
-    UPDATE_GOOD
+    UPDATE_GOOD,
 } from '../actions/goods'
 
 let initialState = {
@@ -36,6 +37,18 @@ const appReducer = (state = initialState, action) => {
                 ...state,
                 currentCatalog: action.payload,
             }
+        case CREATE_CATALOG:
+            return {
+                ...state,
+                status: 'redirect',
+                catalogs: [ action.payload, ...state.catalogs ]
+            }
+        case CREATE_GOOD:
+            return {
+                ...state,
+                status: 'redirect',
+                goods: [ action.payload, ...state.goods ]
+            }
         case CHECK_CATALOG_TITLE:
         case CHECK_GOODS_TITLE:
             errors = { ...state.errors }
@@ -50,6 +63,7 @@ const appReducer = (state = initialState, action) => {
         case UPDATE_CATALOG:
             return {
                 ...state,
+                status: 'redirect',
                 catalogs: state.catalogs.map(catalog => catalog.id === action.payload.id ? action.payload : catalog)
             }
         case DELETE_CATALOG:
@@ -70,12 +84,21 @@ const appReducer = (state = initialState, action) => {
         case UPDATE_GOOD:
             return {
                 ...state,
+                status: 'redirect',
                 goods: state.goods.map(good => good.id === action.payload.id ? action.payload : good)
             }
         case DELETE_GOOD:
             return {
                 ...state,
                 goods: state.goods.filter(good => good.id !== action.id)
+            }
+        case CLEAR:
+            return {
+                ...state,
+                currentCatalog: null,
+                currentGood: null,
+                errors: {},
+                status: '',
             }
         default:
             return state
