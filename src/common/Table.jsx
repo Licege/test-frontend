@@ -1,5 +1,5 @@
 import React from 'react'
-import { Table, Button } from 'react-bootstrap'
+import { Table } from 'react-bootstrap'
 
 export const CustomTable = ({ labels = [], children }) => (
     <Table striped={true} bordered={true} hover={true}>
@@ -11,15 +11,7 @@ export const CustomTable = ({ labels = [], children }) => (
                 </tr>
         </thead>
         <tbody>
-                <tr>
-                    {children}
-                    <td>
-                           <Button variant='link'>Редактировать</Button>
-                    </td>
-                    <td>
-                            <Button variant='link'>Удалить</Button>
-                    </td>
-                </tr>
+            {children}
         </tbody>
     </Table>
 )

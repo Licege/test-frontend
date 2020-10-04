@@ -1,29 +1,52 @@
-import React from 'react'
-import { Form, Button } from 'react-bootstrap'
-import '../styles/form.css'
+import React, { useEffect, useState } from 'react'
+import { useDebounced } from '../hooks/useDebounce'
+import { Button, Form } from 'react-bootstrap'
 
-export const CustomForm = ({ fields, submit, cancel }) => {
-    const RenderFields = ({ fields }) => {
-        return fields.map((field, key) => (
-            <Form.Group controlId={`form_${field.name}`} key={key}>
-                <Form.Label>{field.label}</Form.Label>
-                <Form.Control type={field.type}
-                              onChange={field.func}
-                              as={field.as}
-                              rows={field.rows}
-                              required={field.required}
-                />
-            </Form.Group>
-        ))
+export const CustomForm = ({ data, fields, errors, onSubmit, onCancel, checkAvailableTitle, clearTitleError }) => {
+    const [ values, setValues] = useState(data ?? {})
+
+    const setFieldHandler = ({ target }) => {
+        setValues(prevFields => ({ ...prevFields, [target.name]: target.value }))
     }
 
+    let debouncedTitle = useDebounced(values.title, 3000)
+
+    useEffect(() => {
+        setValues(data ?? {})
+        clearTitleError()
+    }, [data, clearTitleError])
+
+    useEffect(() => {
+        if (data && debouncedTitle.trim() === data.title) {
+            clearTitleError()
+        } else if (debouncedTitle) {
+            checkAvailableTitle(debouncedTitle)
+        }
+    }, [debouncedTitle, data, clearTitleError, checkAvailableTitle])
+
+    useEffect(() => {
+        if (!values?.title) {
+            clearTitleError()
+        }
+    }, [values, clearTitleError])
+
     return (
-        <Form className='form' onSubmit={submit}>
-            <RenderFields fields={fields} />
-            <div className='form-actions'>
-                <Button variant='secondary' type='button' onClick={cancel}>Отмена</Button>
-                <Button variant='primary' type='submit'>Создать</Button>
-            </div>
-        </Form>
+            <Form className='form' onSubmit={onSubmit(values)}>
+                {fields.map((field, key) => (
+                    <Form.Group controlId={`form_${field.name}`} key={key}>
+                        <Form.Label>{field.label}</Form.Label>
+                        <Form.Control value={values[field.name] || ''}
+                                      onChange={setFieldHandler}
+                                      isInvalid={errors[field.name]}
+                                      {...field}
+                        />
+                        {errors[field.name] && <span>{errors[field.name]}</span>}
+                    </Form.Group>
+                ))}
+                <div className='form-actions'>
+                    <Button variant='secondary' type='button' onClick={onCancel}>Отмена</Button>
+                    <Button variant='primary' type='submit'>{data ? 'Обновить' : 'Создать'}</Button>
+                </div>
+            </Form>
     )
 }

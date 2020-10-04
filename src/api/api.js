@@ -7,6 +7,9 @@ export const catalogAPI = {
     getCatalogById(id) {
         return fetchClient(`/catalogs/${id}`)
     },
+    isAvailableTitle(title) {
+        return fetchClient(`/catalogs/available_title/${title}`)
+    },
     postCatalog(body) {
         return fetchClient(`/catalogs/`, {
             method: 'POST',
@@ -27,11 +30,14 @@ export const catalogAPI = {
 }
 
 export const goodsAPI = {
-    getAllGoods() {
-        return fetchClient(`/goods/`)
+    getAllGoods(query = '') {
+        return fetchClient(`/goods${query || '/'}`)
     },
     getGoodById(id) {
         return fetchClient(`/goods/${id}`)
+    },
+    isAvailableTitle(title) {
+        return fetchClient(`/goods/available_title/${title}`)
     },
     createGood(body) {
         return fetchClient(`/goods/`, {

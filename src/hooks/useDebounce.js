@@ -9,7 +9,7 @@ export function useDebounced(value, delay) {
         }, delay)
 
         return () => clearTimeout(handler)
-    }, [value])
+    }, [value, delay])
 
     return debouncedValue
 }
